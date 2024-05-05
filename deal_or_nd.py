@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 # ----------------------------------------------------------------------------
 # Deal Or No Deal
-# Copyright © 2022 Sergey Chernov aka Gamer
+# Copyright © 2022-2024 Sergey Chernov aka Gamer
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -79,17 +79,18 @@ def offer_money(ok):
     global offer
     m = st.mean(ok)
     md = st.median(ok)
-    if (max(ok)) >= 5:
-        offer = st.mean(ok)
-    else:
+    if (len(ok) > 4) or (max(ok) > 5):
         offer = (m + md) / 2
-    if (len(ok) >= 4):
-        offer = offer * ((19 - len(ok)) / 3) / 7.5
-        offer = offer * rnd.randint(90, 110) // 100
-    elif (min(ok) >= 1):
-        offer = rnd.randint(int(min(ok) * 0.65 + max(ok) * 0.35), int(min(ok) * 0.4 + max(ok) * 0.6))
-    elif (max(ok) >= 50):
-        offer = rnd.randint((1 + max(ok) * 0.35), int(1 + max(ok) * 0.6))
+        if (len(ok) >= 4):
+            offer = offer * ((19 - len(ok)) / 3) / 7.5
+            offer = offer * rnd.randint(90, 110) // 100
+        elif (len(ok) == 3):
+            offer = st.mean(ok)
+        elif (len(ok) == 2):
+            offer = rnd.uniform(ok[0] * 0.65 + ok[1] * 0.35, ok[0] * 0.4 + ok[1] * 0.6)
+        offer = int(offer)
+    else:
+        offer = st.mean(ok)
     noz = number_of_zeros(max(ok))
     if (noz >= 4):
         offer = int(round(offer, (rnd.randint(-3, -2))))
@@ -153,7 +154,7 @@ def bank_offer(ip):
         stage = chumodan.open_enabled
     else:
         master = rnd.randint(0, 99)
-        if (master>=10): #10
+        if (master>=15): #10
             if (deal_was_made is False):
                 log.write("Банк предлагает " + str(oii) + '.\n')
                 if tk.messagebox.askyesno("Предложение банка",
@@ -292,7 +293,8 @@ for d in range(len(valizy)):
     dict["own"] = False
     dict["in_game"] = True
     dict["sum"] = sums[d]
-    cases_listofdicts.append(dict)
+    #cases_listofdicts.append(dict)
+    #print(str(d+1)+': '+str(sums[d]))
 
 #print(cases_listofdicts)
 stage = chumodan.choosing
