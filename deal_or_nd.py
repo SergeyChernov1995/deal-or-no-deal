@@ -293,7 +293,7 @@ for d in range(len(valizy)):
     dict["own"] = False
     dict["in_game"] = True
     dict["sum"] = sums[d]
-    #cases_listofdicts.append(dict)
+    cases_listofdicts.append(dict)
     #print(str(d+1)+': '+str(sums[d]))
 
 #print(cases_listofdicts)
